@@ -4,9 +4,13 @@ const $cardWrapper = document.querySelector('.card__wrapper');
 
 const render = boards => {
   $cardWrapper.innerHTML = boards
-    .map(
-      ({ type, title, position, regDate }) =>
-        `<a href="javascript:void(0);" class="card">
+    .map(({ boardId, type, title, position, regDate, summoner, tier }) => {
+      const isRecruitmentCompleted = [...Object.keys(position)].every(pos => !position[pos]);
+
+      // eslint-disable-next-line no-script-url
+      return `<a href="${isRecruitmentCompleted ? 'javascript:void(0);' : '/board/' + boardId}" class="card${
+        isRecruitmentCompleted ? ' card--done' : ''
+      }">
           <span class="card__type">${type}</span>
           <h2 class="card__title">${title}</h2>
           <ul class="position">
@@ -28,13 +32,13 @@ const render = boards => {
           </ul>
           <div class="card__detail">
             <div class="user">
-              <img src="./images/emblem/gold.png" alt="티어" class="user__tier" />
-              <span class="user__name">|푸른피|</span>
+              <img src="/images/emblem/${tier}.png" alt="티어" class="user__tier" />
+              <span class="user__name">${summoner}</span>
             </div>
             <span class="regDate">${formatRegDate(regDate)}</span>
           </div>
-        </a>`
-    )
+        </a>`;
+    })
     .join('');
 };
 

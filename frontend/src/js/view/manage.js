@@ -1,13 +1,14 @@
-const render = manageData => {
-  const participants = manageData.participantList
+const renderParticipantList = ($participantList, manageData) => {
+  console.log(manageData);
+  $participantList.innerHTML = manageData.participantList
     .map(({ userId, tier, rank, summoner, mainChamp, position, completed }) =>
       completed
         ? ''
         : `
     <li class="participant" data-summoner="${summoner}" data-user-id="${userId}">
-    <img src="./images/position/${position}.png" alt="" class="participant__position">
+    <img src="/images/position/${position}.png" alt="" class="participant__position">
     <div class="participant__main-wrapper">
-      <img class="participant-tier" src="./images/emblem/${tier}.png" alt="${tier}">
+      <img class="participant-tier" src="/images/emblem/${tier}.png" alt="${tier}">
       <div class="participant__check-wrapper">
         <button class="participant__check approve" data-approve=true>
           <box-icon name="check" color="#9182f6"></box-icon>
@@ -50,7 +51,6 @@ const render = manageData => {
   `
     )
     .join('');
-  return participants;
 };
 
-export default render;
+export default renderParticipantList;

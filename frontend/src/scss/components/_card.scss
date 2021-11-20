@@ -9,7 +9,7 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: rem(10);
 
-  @include mobile {
+  @media (max-width: 540px) {
     width: 100%;
   }
 
@@ -23,7 +23,7 @@
   }
 
   &__title {
-    margin-top: rem(10);
+    margin-top: rem(20);
     font-size: rem(18);
     font-weight: 700;
     text-overflow: ellipsis;
@@ -36,6 +36,18 @@
     flex-wrap: wrap;
     margin: 0 auto;
     gap: rem(40);
+    // width: rem(480);
+    // 3개 rem(740)
+    // 2개 rem(480)
+    @media (max-width: 1060px) {
+      width: rem(740);
+    }
+    @media (max-width: 800px) {
+      width: rem(480);
+    }
+    @media (max-width: 540px) {
+      width: 100%;
+    }
   }
 
   &__detail {
@@ -72,10 +84,33 @@
       color: $gray05;
     }
   }
+
+  &--done {
+    position: relative;
+    opacity: 0.7;
+    background-color: rgba(227, 227, 227);
+    cursor: default;
+  }
+
+  &--done:after {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    content: '모집 완료';
+    position: absolute;
+    top: 40%;
+    left: 25%;
+    width: 50%;
+    height: 25%;
+    background-color: $gray05;
+    color: $gray03;
+    border-radius: rem(4);
+    font-size: rem(20);
+  }
 }
 
 .position {
-  margin: rem(30) 0 rem(45);
+  margin: rem(30) 0 rem(35);
   display: flex;
   justify-content: space-between;
   width: 70%;

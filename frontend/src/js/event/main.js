@@ -1,10 +1,20 @@
-import { fetchBoards, fetchMoreBoards, changeTypeFilter, changePositionFilter } from '../controller/main';
+import { fetchBoards, changeTypeFilter, changePositionFilter } from '../controller/main';
+import setHeader from '../utils/header';
 
 const $potButton = document.querySelector('.pot-button');
 const $mainFilterPositionList = document.querySelector('.main__filter-position-list');
-const $more = document.querySelector('.more');
+const $loading = document.querySelector('.loading');
 
-document.addEventListener('DOMContentLoaded', fetchBoards);
+const options = {
+  threshold: 0,
+};
+
+const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+  if (isIntersecting) fetchBoards();
+}, options);
+observer.observe($loading);
+
+window.addEventListener('DOMContentLoaded', setHeader);
 
 $potButton.onclick = ({ target }) => {
   if (!target.classList.contains('button') || !target.classList.contains('button-deactive')) return;
@@ -12,6 +22,8 @@ $potButton.onclick = ({ target }) => {
   [...$potButton.children].forEach($el => {
     $el.classList.toggle('button-deactive', $el !== target);
   });
+
+  $loading.classList.remove('hidden');
 
   changeTypeFilter(target.dataset.type);
 };
@@ -29,14 +41,7 @@ $mainFilterPositionList.onclick = ({ target }) => {
     $el.classList.toggle('main__filter-position-item--selected', $el === $li);
   });
 
+  $loading.classList.remove('hidden');
+
   changePositionFilter($li.dataset.position);
 };
-
-const options = {
-  threshold: 1.0,
-};
-
-const observer = new IntersectionObserver(([{ isIntersecting }]) => {
-  if (isIntersecting) fetchMoreBoards();
-}, options);
-observer.observe($more);

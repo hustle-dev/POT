@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { findUserByEmail, findUser, registerUser, getUsers } = require('../query/userQuery');
+const { findUserByEmail, findUser, registerUser, getUsers, updateUserSummoner } = require('../query/userQuery');
 const { registerValidation, loginValidation } = require('../utils/validation');
 
 router.post('/register', async (req, res) => {
-  console.log(req.body);
   const { error } = registerValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -40,6 +39,16 @@ router.post('/checkid', (req, res) => {
   return res.send(true);
 });
 
+router.post('/updateUserSummoner', (req, res) => {
+  const { jwtToken } = req.cookies;
+  const { summoner, encryptedId } = req.body;
+
+  const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+  const { userId } = decoded;
+
+  updateUserSummoner(userId, summoner, encryptedId);
+});
+
 router.post('/login', async (req, res) => {
   const { error } = loginValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -53,32 +62,18 @@ router.post('/login', async (req, res) => {
   // Password is correct
   const validPass = await bcrypt.compare(password, user.password);
   if (!validPass) return res.status(401).send('Invalid password');
+  // console.log(user);
 
+  const { userId } = user;
   // Create and assign a token
-  const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+  const jwtToken = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
   // 쿠키에 토큰 설정(http://expressjs.com/ko/api.html#res.cookie)
-  res.cookie('jwtToken', token, {
-    maxAge: 1000 * 60 * 60 * 24, // 1d
-    httpOnly: true,
-  });
-  res.cookie('summoner', user.summoner, {
-    maxAge: 1000 * 60 * 60 * 24, // 1d
-    httpOnly: true,
-  });
-  res.cookie('encryptedId', user.encryptedId, {
+  res.cookie('jwtToken', jwtToken, {
     maxAge: 1000 * 60 * 60 * 24, // 1d
     httpOnly: true,
   });
 
-  console.log('hi');
-
-  res.redirect('/');
-  return res.redirect('/');
-
-  // return req.query.path ? res.redirect(req.query.path) : res.redirect('/');
-  // res.send({ email, encryptedId: user.encryptedId });
-  // res.redirect('/');
-  // return req.query.path ? res.redirect(req.query.path) : res.redirect('/');
+  res.send({ userId: user.userId });
 });
 
 module.exports = router;
