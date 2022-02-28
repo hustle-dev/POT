@@ -1,4 +1,4 @@
-개인 블로그 회고 링크: https://velog.io/@hustle-dev/%EB%AF%B8%EB%8B%88%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-POT
+개인 블로그 회고 링크: https://velog.io/@hustle-dev/%EB%AF%B8%EB%8B%88%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-POT 
 
 # 🥑 팥(POT)
 
